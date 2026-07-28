@@ -4,6 +4,17 @@
 
 **Hand-drawn whiteboard animation tool** — Convert images, SVGs, line art, photos, or text scripts into hand-drawn whiteboard MP4 videos. Engine is bundled, clone and use.
 
+## Engine Download
+
+The rendering engine is bundled in this repository, no separate installation needed:
+
+- **GitHub source**: [whiteboard_skill/](https://github.com/huige-opc/whiteboard-draw/tree/master/whiteboard_skill)
+- **Download**: Just clone the whole repo, the engine lives in `whiteboard_skill/`
+
+```bash
+git clone https://github.com/huige-opc/whiteboard-draw.git
+```
+
 ## Quick Start
 
 ```bash
@@ -15,11 +26,7 @@ pip install numpy Pillow pydantic
 # macOS:   brew install ffmpeg
 # Linux:   apt install ffmpeg
 
-# 3. Clone
-git clone https://github.com/huige-opc/whiteboard-draw.git
-cd whiteboard-draw
-
-# 4. Verify
+# 3. Verify
 python3 scripts/whiteboard_cli.py doctor
 
 # 5. Try it (SVG to whiteboard)

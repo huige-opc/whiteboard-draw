@@ -4,6 +4,17 @@
 
 **白板手绘动画生成工具** — 把图片、SVG、线稿、照片或文字脚本，转换成手绘白板动画视频（MP4）。引擎已内置，clone 即用。
 
+## 引擎下载
+
+渲染引擎已内置在仓库中，无需单独安装：
+
+- **GitHub 源码**：[whiteboard_skill/](https://github.com/huige-opc/whiteboard-draw/tree/master/whiteboard_skill)
+- **下载 ZIP**：clone 整个仓库即可，引擎就在 `whiteboard_skill/` 目录下
+
+```bash
+git clone https://github.com/huige-opc/whiteboard-draw.git
+```
+
 ## 快速开始
 
 ```bash
@@ -15,11 +26,7 @@ pip install numpy Pillow pydantic
 # macOS:   brew install ffmpeg
 # Linux:   apt install ffmpeg
 
-# 3. 下载
-git clone https://github.com/huige-opc/whiteboard-draw.git
-cd whiteboard-draw
-
-# 4. 验证
+# 3. 验证
 python3 scripts/whiteboard_cli.py doctor
 
 # 5. 试试效果（SVG 转手绘）
