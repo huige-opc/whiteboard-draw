@@ -117,27 +117,32 @@ python3 scripts/whiteboard_cli.py compose -i clip1.mp4 clip2.mp4 -o final.mp4
 
 ## Local Line-Art Models (Advanced)
 
-Line-art extraction requires neural network models. **Not included in this repository**.
+`render-photo` requires a line-art extraction model. **The weight file (208MB) is not included**, download separately.
 
-Recommended layout (in your project directory, outside this repo):
+### Anime2Sketch (Recommended)
+
+File layout:
 
 ```text
-my-whiteboard-project/
+your-project/
   tools/
     lineart/
-      run_informative_drawings.py
-      run_anime2sketch.py
-    informative-drawings/      # full upstream checkout
-      checkpoints/model/anime_style/netG_A_latest.pth
-    Anime2Sketch/               # full upstream checkout
-      weights/netG.pth
+      run_anime2sketch.py      ← shipped in this repo (references/wrappers/)
+    Anime2Sketch/
+      model.py etc.             ← download ZIP and extract
+      weights/netG.pth          ← download weight (208MB)
 ```
 
-Or via environment variables:
+| File | Download |
+|------|----------|
+| Source code ZIP | [Anime2Sketch-master.zip](https://github.com/Mukosame/Anime2Sketch/archive/refs/heads/master.zip) |
+| Weights (208MB) | [netG.pth](https://huggingface.co/lllyasviel/Annotators/resolve/main/netG.pth) |
+| Wrapper script | `references/wrappers/run_anime2sketch.py` in this repo |
+
+Set environment variable:
 
 ```bash
-export WHITEBOARD_INFORMATIVE_DRAWINGS_CMD="python /path/to/run_informative_drawings.py {input} {output}"
-export WHITEBOARD_ANIME2SKETCH_CMD="python /path/to/run_anime2sketch.py {input} {output}"
+set WHITEBOARD_ANIME2SKETCH_CMD=py tools/lineart/run_anime2sketch.py {input} {output}
 ```
 
 ## Contents

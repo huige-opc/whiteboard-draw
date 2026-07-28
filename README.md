@@ -123,56 +123,37 @@ python3 scripts/whiteboard_cli.py compose -i clip1.mp4 clip2.mp4 -o final.mp4
 
 ## 本地线稿模型（进阶）
 
-照片转手绘（`render-photo`）需要线稿提取模型。**模型文件不包含在本仓库中**，需手动下载。
+照片转手绘（`render-photo`）需要线稿提取模型。**权重文件（208MB）不包含在本仓库中**，需单独下载。
 
 ### Anime2Sketch（推荐，插画/动漫效果好）
 
-```bash
-# 1. 下载模型源码
-git clone https://github.com/Mukosame/Anime2Sketch.git tools/Anime2Sketch
-
-# 2. 下载权重文件（约 208MB）
-# 下载地址：https://huggingface.co/lllyasviel/Annotators/resolve/main/netG.pth
-# 放到 tools/Anime2Sketch/weights/netG.pth
-
-# 3. 包装脚本已提供（本仓库 references/wrappers/run_anime2sketch.py）
-#    复制到 tools/lineart/run_anime2sketch.py
-
-# 4. 设置环境变量
-set WHITEBOARD_ANIME2SKETCH_CMD=py tools/lineart/run_anime2sketch.py {input} {output}
-```
-
-### Informative Drawings（照片效果好）
-
-```bash
-# 1. 下载模型源码
-git clone https://github.com/carolineec/informative-drawings.git tools/informative-drawings
-
-# 2. 下载权重 anime_style 模型
-
-# 3. 设置环境变量
-set WHITEBOARD_INFORMATIVE_DRAWINGS_CMD=py tools/lineart/run_informative_drawings.py {input} {output}
-```
-
-### 最终目录结构
+下载以下 2 个文件，按目录结构放好：
 
 ```text
 你的项目目录/
   tools/
     lineart/
-      run_anime2sketch.py          # 包装脚本（本仓库 references/wrappers/）
-    Anime2Sketch/                   # 克隆的上游仓库
-      model.py
-      weights/netG.pth             # 下载的权重
+      run_anime2sketch.py      ← 本仓库已提供，直接复制
+    Anime2Sketch/
+      model.py 等源码           ← 下载 ZIP 解压
+      weights/netG.pth          ← 下载权重文件（208MB）
 ```
 
-### Windows 注意
+| 文件 | 下载链接 |
+|------|---------|
+| 模型源码 ZIP | [Anime2Sketch-master.zip](https://github.com/Mukosame/Anime2Sketch/archive/refs/heads/master.zip) |
+| 权重文件 (208MB) | [netG.pth](https://huggingface.co/lllyasviel/Annotators/resolve/main/netG.pth) |
+| 包装脚本 | 本仓库 `references/wrappers/run_anime2sketch.py` |
 
-如果 `python3` 命令不可用，用 `py` 代替。设置环境变量时用 `py`：
+下载后设置环境变量：
 
 ```bash
 set WHITEBOARD_ANIME2SKETCH_CMD=py tools/lineart/run_anime2sketch.py {input} {output}
 ```
+
+### Informative Drawings（照片效果好）
+
+同上结构，源码 clone、权重从官方下载。
 
 ## 本地开发
 
