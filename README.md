@@ -123,37 +123,88 @@ python3 scripts/whiteboard_cli.py compose -i clip1.mp4 clip2.mp4 -o final.mp4
 
 ## 本地线稿模型（进阶）
 
-照片转手绘（`render-photo`）需要线稿提取模型。**权重文件（208MB）不包含在本仓库中**，需单独下载。
+`render-photo`（照片转手绘）需要线稿模型才能工作。如果只做 SVG/线稿转手绘，**不需要**这一步。
 
-### Anime2Sketch（推荐，插画/动漫效果好）
+### 安装步骤
 
-下载以下 2 个文件，按目录结构放好：
+#### 第 1 步：创建目录结构
+
+在你的项目目录下创建：
 
 ```text
-你的项目目录/
-  tools/
-    lineart/
-      run_anime2sketch.py      ← 本仓库已提供，直接复制
-    Anime2Sketch/
-      model.py 等源码           ← 下载 ZIP 解压
-      weights/netG.pth          ← 下载权重文件（208MB）
+你的项目/tools/
+  lineart/           ← 放包装脚本
+  Anime2Sketch/      ← 放模型源码和权重
+    weights/
 ```
 
-| 文件 | 下载链接 |
-|------|---------|
-| 模型源码 ZIP | [Anime2Sketch-master.zip](https://github.com/Mukosame/Anime2Sketch/archive/refs/heads/master.zip) |
-| 权重文件 (208MB) | [netG.pth](https://huggingface.co/lllyasviel/Annotators/resolve/main/netG.pth) |
-| 包装脚本 | 本仓库 `references/wrappers/run_anime2sketch.py` |
+#### 第 2 步：下载模型源码（18MB）
 
-下载后设置环境变量：
+模型源码包含神经网络代码，用来把照片转成线稿。
+
+[点此下载 Anime2Sketch-master.zip](https://github.com/Mukosame/Anime2Sketch/archive/refs/heads/master.zip)
+
+下载后解压到 `tools/Anime2Sketch/`，最终目录：
+
+```text
+tools/Anime2Sketch/model.py      ← 核心模型代码
+tools/Anime2Sketch/data.py       ← 数据处理
+tools/Anime2Sketch/weights/      ← 放权重的空目录
+```
+
+#### 第 3 步：下载权重文件（208MB）
+
+权重文件是模型训练好的参数，模型靠它识别图像轮廓。
+
+[点此下载 netG.pth](https://huggingface.co/lllyasviel/Annotators/resolve/main/netG.pth)
+
+下载后放入 `tools/Anime2Sketch/weights/netG.pth`
+
+#### 第 4 步：复制包装脚本
+
+包装脚本是本仓库提供的，用来衔接引擎和模型。
+
+把 `references/wrappers/run_anime2sketch.py` 复制到 `tools/lineart/run_anime2sketch.py`
+
+#### 第 5 步：设置环境变量
+
+告诉引擎去哪里找包装脚本：
 
 ```bash
 set WHITEBOARD_ANIME2SKETCH_CMD=py tools/lineart/run_anime2sketch.py {input} {output}
 ```
 
-### Informative Drawings（照片效果好）
+> Windows 用户：如果 `python3` 命令不可用，用 `py` 代替
 
-同上结构，源码 clone、权重从官方下载。
+#### 第 6 步：验证
+
+```bash
+python3 scripts/whiteboard_cli.py doctor
+```
+
+### 最终目录结构
+
+```text
+你的项目/
+  tools/
+    lineart/
+      run_anime2sketch.py      ← 包装脚本（复制过来的）
+    Anime2Sketch/
+      model.py                  ← 解压出来的
+      data.py
+      weights/
+        netG.pth               ← 下载的权重文件（208MB）
+  whiteboard-draw/              ← 本仓库
+    scripts/whiteboard_cli.py
+    whiteboard_skill/
+```
+
+### 模型有什么用？
+
+| 模型 | 用途 | 没有它行不行？ |
+|------|------|--------------|
+| Anime2Sketch | 照片/插画 → 线稿 | SVG/线稿转手绘不需要；照片转手绘必须有 |
+| netG.pth 权重 | 模型的核心参数 | 模型必须有权重才能工作 |
 
 ## 本地开发
 

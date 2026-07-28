@@ -117,32 +117,74 @@ python3 scripts/whiteboard_cli.py compose -i clip1.mp4 clip2.mp4 -o final.mp4
 
 ## Local Line-Art Models (Advanced)
 
-`render-photo` requires a line-art extraction model. **The weight file (208MB) is not included**, download separately.
+`render-photo` requires a line-art extraction model. SVG / line-art rendering works **without** this.
 
-### Anime2Sketch (Recommended)
+### Step-by-Step Setup
 
-File layout:
+#### Step 1: Create directories
 
-```text
-your-project/
-  tools/
-    lineart/
-      run_anime2sketch.py      ← shipped in this repo (references/wrappers/)
-    Anime2Sketch/
-      model.py etc.             ← download ZIP and extract
-      weights/netG.pth          ← download weight (208MB)
+```
+your-project/tools/
+  lineart/
+  Anime2Sketch/
+    weights/
 ```
 
-| File | Download |
-|------|----------|
-| Source code ZIP | [Anime2Sketch-master.zip](https://github.com/Mukosame/Anime2Sketch/archive/refs/heads/master.zip) |
-| Weights (208MB) | [netG.pth](https://huggingface.co/lllyasviel/Annotators/resolve/main/netG.pth) |
-| Wrapper script | `references/wrappers/run_anime2sketch.py` in this repo |
+#### Step 2: Download model source code (18MB)
 
-Set environment variable:
+Contains the neural network code for line-art extraction.
+
+[Download Anime2Sketch-master.zip](https://github.com/Mukosame/Anime2Sketch/archive/refs/heads/master.zip)
+
+Extract to `tools/Anime2Sketch/`:
+
+```
+tools/Anime2Sketch/model.py
+tools/Anime2Sketch/data.py
+tools/Anime2Sketch/weights/          ← (empty, for next step)
+```
+
+#### Step 3: Download weight file (208MB)
+
+The pre-trained model parameters — required for the model to work.
+
+[Download netG.pth](https://huggingface.co/lllyasviel/Annotators/resolve/main/netG.pth)
+
+Place at `tools/Anime2Sketch/weights/netG.pth`
+
+#### Step 4: Copy wrapper script
+
+Copy `references/wrappers/run_anime2sketch.py` to `tools/lineart/run_anime2sketch.py`
+
+#### Step 5: Set environment variable
 
 ```bash
 set WHITEBOARD_ANIME2SKETCH_CMD=py tools/lineart/run_anime2sketch.py {input} {output}
+```
+
+> Windows: use `py` if `python3` is unavailable
+
+#### Step 6: Verify
+
+```bash
+python3 scripts/whiteboard_cli.py doctor
+```
+
+### Final Layout
+
+```
+your-project/
+  tools/
+    lineart/
+      run_anime2sketch.py       ← wrapper script (copied)
+    Anime2Sketch/
+      model.py                   ← extracted from zip
+      data.py
+      weights/
+        netG.pth                ← downloaded weight (208MB)
+  whiteboard-draw/               ← this repo
+    scripts/whiteboard_cli.py
+    whiteboard_skill/
 ```
 
 ## Contents
