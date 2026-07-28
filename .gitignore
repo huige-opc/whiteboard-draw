@@ -1,0 +1,28 @@
+__pycache__/
+*.pyc
+.DS_Store
+.env
+.venv/
+.venv-lineart/
+out/
+work/
+output/
+*.mp4
+*.mp3
+*.wav
+*.mov
+
+# Model repos (clone separately, don't vendor)
+tools/informative-drawings/
+tools/Anime2Sketch/
+
+# Model weights
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+*.onnx
+*.bin
+*.zip
+*.tar
+*.tar.gz

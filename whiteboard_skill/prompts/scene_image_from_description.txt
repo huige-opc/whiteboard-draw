@@ -1,0 +1,5 @@
+Create one simple whiteboard-video scene image from this script or description.
+Use a clear single-subject composition with readable silhouettes and expressive poses.
+Avoid text, letters, labels, UI, screenshots, photorealistic texture, dense backgrounds, and tiny details.
+Do not add a picture frame, page border, crop outline, or decorative border around the image.
+The image will later be converted into pure black line art for stroke-by-stroke drawing animation.
