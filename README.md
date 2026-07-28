@@ -121,90 +121,49 @@ python3 scripts/whiteboard_cli.py analyze-image input.png -o analysis.json
 python3 scripts/whiteboard_cli.py compose -i clip1.mp4 clip2.mp4 -o final.mp4
 ```
 
-## 本地线稿模型（进阶）
+## 本地线稿模型
 
-`render-photo`（照片转手绘）需要线稿模型才能工作。如果只做 SVG/线稿转手绘，**不需要**这一步。
+`render-photo`（照片转手绘）需要线稿模型。**模型源码和包装脚本已内置**，只需额外下载权重文件。
 
-### 安装步骤
+### 目录结构
 
-#### 第 1 步：创建目录结构
-
-在你的项目目录下创建：
-
-```text
-你的项目/tools/
-  lineart/           ← 放包装脚本
-  Anime2Sketch/      ← 放模型源码和权重
-    weights/
+```
+whiteboard-draw/
+  tools/
+    lineart/
+      run_anime2sketch.py      ← 包装脚本（已内置）
+    Anime2Sketch/
+      model.py                  ← 模型源码（已内置）
+      data.py
+      weights/
+        netG.pth               ← 模型权重 ⬅ 需要你下载
+  whiteboard_skill/             ← 引擎
+  scripts/whiteboard_cli.py
 ```
 
-#### 第 2 步：下载模型源码（18MB）
+### 需要下载
 
-模型源码包含神经网络代码，用来把照片转成线稿。
-
-[点此下载 Anime2Sketch-master.zip](https://github.com/Mukosame/Anime2Sketch/archive/refs/heads/master.zip)
-
-下载后解压到 `tools/Anime2Sketch/`，最终目录：
-
-```text
-tools/Anime2Sketch/model.py      ← 核心模型代码
-tools/Anime2Sketch/data.py       ← 数据处理
-tools/Anime2Sketch/weights/      ← 放权重的空目录
-```
-
-#### 第 3 步：下载权重文件（208MB）
-
-权重文件是模型训练好的参数，模型靠它识别图像轮廓。
+**权重文件 netG.pth（208MB）**：模型训练好的参数，靠它识别图像轮廓。
 
 [点此下载 netG.pth](https://huggingface.co/lllyasviel/Annotators/resolve/main/netG.pth)
 
-下载后放入 `tools/Anime2Sketch/weights/netG.pth`
+下载后放到 `tools/Anime2Sketch/weights/netG.pth`
 
-#### 第 4 步：复制包装脚本
+### 使用
 
-包装脚本是本仓库提供的，用来衔接引擎和模型。
+下载权重后，直接运行即可：
 
-把 `references/wrappers/run_anime2sketch.py` 复制到 `tools/lineart/run_anime2sketch.py`
+```bash
+python3 scripts/whiteboard_cli.py render-photo photo.jpg -o out.mp4 --duration 15 --hand asian
+```
 
-#### 第 5 步：设置环境变量
-
-告诉引擎去哪里找包装脚本：
+如果自动发现失败，设置环境变量：
 
 ```bash
 set WHITEBOARD_ANIME2SKETCH_CMD=py tools/lineart/run_anime2sketch.py {input} {output}
 ```
 
-> Windows 用户：如果 `python3` 命令不可用，用 `py` 代替
-
-#### 第 6 步：验证
-
-```bash
-python3 scripts/whiteboard_cli.py doctor
-```
-
-### 最终目录结构
-
-```text
-你的项目/
-  tools/
-    lineart/
-      run_anime2sketch.py      ← 包装脚本（复制过来的）
-    Anime2Sketch/
-      model.py                  ← 解压出来的
-      data.py
-      weights/
-        netG.pth               ← 下载的权重文件（208MB）
-  whiteboard-draw/              ← 本仓库
-    scripts/whiteboard_cli.py
-    whiteboard_skill/
-```
-
-### 模型有什么用？
-
-| 模型 | 用途 | 没有它行不行？ |
-|------|------|--------------|
-| Anime2Sketch | 照片/插画 → 线稿 | SVG/线稿转手绘不需要；照片转手绘必须有 |
-| netG.pth 权重 | 模型的核心参数 | 模型必须有权重才能工作 |
+> Windows 用户：`python3` 不可用时用 `py` 代替
 
 ## 本地开发
 
@@ -218,6 +177,7 @@ pip install -e /path/to/whiteboard-draw
 | 目录/文件 | 说明 |
 |-----------|------|
 | `whiteboard_skill/` | 渲染引擎（已内置） |
+| `tools/` | 线稿模型（Anime2Sketch，已内置） |
 | `scripts/whiteboard_cli.py` | 命令行入口 |
 | `SKILL.md` | AI 编程助手 skill 指令 |
 | `references/` | 工作流参考文档 |

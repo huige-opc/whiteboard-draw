@@ -115,76 +115,46 @@ python3 scripts/whiteboard_cli.py analyze-image input.png -o analysis.json
 python3 scripts/whiteboard_cli.py compose -i clip1.mp4 clip2.mp4 -o final.mp4
 ```
 
-## Local Line-Art Models (Advanced)
+## Local Line-Art Model
 
-`render-photo` requires a line-art extraction model. SVG / line-art rendering works **without** this.
+`render-photo` requires a line-art extraction model. **Source code and wrapper are bundled** — only the weight file needs a separate download.
 
-### Step-by-Step Setup
-
-#### Step 1: Create directories
+### Structure
 
 ```
-your-project/tools/
-  lineart/
-  Anime2Sketch/
-    weights/
+whiteboard-draw/
+  tools/
+    lineart/
+      run_anime2sketch.py      ← wrapper (bundled)
+    Anime2Sketch/
+      model.py                  ← model source (bundled)
+      data.py
+      weights/
+        netG.pth               ← model weights ⬅ download separately
+  whiteboard_skill/             ← engine
+  scripts/whiteboard_cli.py
 ```
 
-#### Step 2: Download model source code (18MB)
+### Download
 
-Contains the neural network code for line-art extraction.
-
-[Download Anime2Sketch-master.zip](https://github.com/Mukosame/Anime2Sketch/archive/refs/heads/master.zip)
-
-Extract to `tools/Anime2Sketch/`:
-
-```
-tools/Anime2Sketch/model.py
-tools/Anime2Sketch/data.py
-tools/Anime2Sketch/weights/          ← (empty, for next step)
-```
-
-#### Step 3: Download weight file (208MB)
-
-The pre-trained model parameters — required for the model to work.
+**netG.pth (208MB)** — the pre-trained model parameters.
 
 [Download netG.pth](https://huggingface.co/lllyasviel/Annotators/resolve/main/netG.pth)
 
 Place at `tools/Anime2Sketch/weights/netG.pth`
 
-#### Step 4: Copy wrapper script
+### Usage
 
-Copy `references/wrappers/run_anime2sketch.py` to `tools/lineart/run_anime2sketch.py`
+After downloading the weight, just run:
 
-#### Step 5: Set environment variable
+```bash
+python3 scripts/whiteboard_cli.py render-photo photo.jpg -o out.mp4 --duration 15 --hand asian
+```
+
+If auto-discovery fails:
 
 ```bash
 set WHITEBOARD_ANIME2SKETCH_CMD=py tools/lineart/run_anime2sketch.py {input} {output}
-```
-
-> Windows: use `py` if `python3` is unavailable
-
-#### Step 6: Verify
-
-```bash
-python3 scripts/whiteboard_cli.py doctor
-```
-
-### Final Layout
-
-```
-your-project/
-  tools/
-    lineart/
-      run_anime2sketch.py       ← wrapper script (copied)
-    Anime2Sketch/
-      model.py                   ← extracted from zip
-      data.py
-      weights/
-        netG.pth                ← downloaded weight (208MB)
-  whiteboard-draw/               ← this repo
-    scripts/whiteboard_cli.py
-    whiteboard_skill/
 ```
 
 ## Contents

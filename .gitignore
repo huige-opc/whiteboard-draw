@@ -12,9 +12,8 @@ output/
 *.wav
 *.mov
 
-# Model repos (clone separately, don't vendor)
+# Other model repos (not bundled)
 tools/informative-drawings/
-tools/Anime2Sketch/
 
 # Model weights
 *.pth
