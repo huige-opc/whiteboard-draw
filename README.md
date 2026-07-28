@@ -123,27 +123,55 @@ python3 scripts/whiteboard_cli.py compose -i clip1.mp4 clip2.mp4 -o final.mp4
 
 ## 本地线稿模型（进阶）
 
-线稿提取依赖神经网络模型，需要额外下载。**模型文件不包含在本仓库中**。
+照片转手绘（`render-photo`）需要线稿提取模型。**模型文件不包含在本仓库中**，需手动下载。
 
-推荐目录结构（放在你的项目目录下，不是本仓库内）：
-
-```text
-my-whiteboard-project/
-  tools/
-    lineart/
-      run_informative_drawings.py
-      run_anime2sketch.py
-    informative-drawings/      # 完整克隆上游仓库
-      checkpoints/model/anime_style/netG_A_latest.pth
-    Anime2Sketch/               # 完整克隆上游仓库
-      weights/netG.pth
-```
-
-也支持环境变量指定命令：
+### Anime2Sketch（推荐，插画/动漫效果好）
 
 ```bash
-export WHITEBOARD_INFORMATIVE_DRAWINGS_CMD="python /path/to/run_informative_drawings.py {input} {output}"
-export WHITEBOARD_ANIME2SKETCH_CMD="python /path/to/run_anime2sketch.py {input} {output}"
+# 1. 下载模型源码
+git clone https://github.com/Mukosame/Anime2Sketch.git tools/Anime2Sketch
+
+# 2. 下载权重文件（约 208MB）
+# 下载地址：https://huggingface.co/lllyasviel/Annotators/resolve/main/netG.pth
+# 放到 tools/Anime2Sketch/weights/netG.pth
+
+# 3. 包装脚本已提供（本仓库 references/wrappers/run_anime2sketch.py）
+#    复制到 tools/lineart/run_anime2sketch.py
+
+# 4. 设置环境变量
+set WHITEBOARD_ANIME2SKETCH_CMD=py tools/lineart/run_anime2sketch.py {input} {output}
+```
+
+### Informative Drawings（照片效果好）
+
+```bash
+# 1. 下载模型源码
+git clone https://github.com/carolineec/informative-drawings.git tools/informative-drawings
+
+# 2. 下载权重 anime_style 模型
+
+# 3. 设置环境变量
+set WHITEBOARD_INFORMATIVE_DRAWINGS_CMD=py tools/lineart/run_informative_drawings.py {input} {output}
+```
+
+### 最终目录结构
+
+```text
+你的项目目录/
+  tools/
+    lineart/
+      run_anime2sketch.py          # 包装脚本（本仓库 references/wrappers/）
+    Anime2Sketch/                   # 克隆的上游仓库
+      model.py
+      weights/netG.pth             # 下载的权重
+```
+
+### Windows 注意
+
+如果 `python3` 命令不可用，用 `py` 代替。设置环境变量时用 `py`：
+
+```bash
+set WHITEBOARD_ANIME2SKETCH_CMD=py tools/lineart/run_anime2sketch.py {input} {output}
 ```
 
 ## 本地开发
